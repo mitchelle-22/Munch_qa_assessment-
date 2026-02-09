@@ -41,10 +41,10 @@ This generates the Playwright configuration file, test folder structure, and req
 munch-qa-assessment/
 - tests/
   - login.spec.ts               (Task 1: Login validation)
-  - productList_sorting.spec.ts (Task 2: Product sorting validation)
-  - cart.spec.ts                (Task 3: Add & remove cart items)
+  - productSorting.spec.ts (Task 2: Product sorting validation)
+  - addRemoveCart.spec.ts                (Task 3: Add & remove cart items)
   - checkout.spec.ts            (Task 4: Checkout workflow)
-  - negative.spec.ts            (Task 5: Negative & edge case tests)
+  - negativeTesting.spec.ts            (Task 5: Negative & edge case tests)
 - screenshots/                  (Screenshots captured during test execution)
 - playwright.config.ts
 - package.json
@@ -99,6 +99,9 @@ npx playwright test
 
 ### Run a specific test file
 npx playwright test tests/login.spec.ts
+
+### To run all the files 
+npx playwright test tests
 
 ### View HTML report
 npx playwright show-report
