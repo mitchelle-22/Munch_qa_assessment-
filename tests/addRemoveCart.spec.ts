@@ -11,26 +11,26 @@ test('Add and remove items from the cart', async ({ page }) => {
   await page.click('#login-button');
 
   // 3. Locate all "Add to cart" buttons
-  // Each product has one button with class '.btn_inventory'
+  // Each product has one button with class '.btn_inventory' (Locator)
   const addToCartButtons = page.locator('.btn_inventory');
 
-  // 4. Add first 3 items to the cart using a loop
+  // 4. Addidng first 3 items to the cart
   for (let i = 0; i < 3; i++) {
     await addToCartButtons.nth(i).click();
   }
 
-  // 5. Validate the cart badge shows "3"
+  // 5. Validate the cart badge shows "3" should update accordingly
   const cartBadge = page.locator('.shopping_cart_badge');
   await expect(cartBadge).toHaveText('3');
 
-  // 6. Navigate to the cart page
-  await page.click('.shopping_cart_link');
+  // 6. Navigate to the cart page   
+  await page.click('.shopping_cart_link'); 
 
   // 7. Remove 1 item from the cart
   // '.cart_button' represents the Remove button in the cart
   await page.locator('.cart_button').first().click();
 
-  // 8. Assert that only 2 items remain in the cart
+  // 8. 2 items should remain after removing
   const cartItems = page.locator('.cart_item');
   await expect(cartItems).toHaveCount(2);
 

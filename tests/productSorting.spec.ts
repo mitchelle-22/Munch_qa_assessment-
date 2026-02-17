@@ -1,56 +1,46 @@
 import { test, expect } from '@playwright/test';
 
 test('Sort products by price low to high and validate title-price pairing', async ({ page }) => {
-    // 1. Navigate and login
-    await page.goto('https://www.saucedemo.com/');
-    await page.fill('#user-name', 'standard_user');
-    await page.fill('#password', 'secret_sauce');
-    await page.click('#login-button');
+  // 1. Navigate to Swag Labs
+  await page.goto('https://www.saucedemo.com/');
 
-    // 2. Select "Price (low to high)"
-    await page.selectOption('.product_sort_container', 'lohi');
+  // 2. Login
+  await page.fill('#user-name', 'standard_user');
+  await page.fill('#password', 'secret_sauce');
+  await page.click('#login-button');
 
-    // 3. Capture all product items
-    const items = page.locator('.inventory_item');
+  // 3. Select "Price (low to high)"
+  await page.selectOption('.product_sort_container', 'lohi');
 
-    const productData: { title: string; price: number }[] = [];  // my array 
+  // 4. The use of allTextContents() to capture ALL product titles and prices using
+  const titles = await page
+    .locator('.inventory_item_name')
+    .allTextContents();
 
+  const pricesText = await page
+    .locator('.inventory_item_price')
+    .allTextContents();
 
-    // 4. Loop through each product and capture title + price
-    const count = await items.count();
+  // 5. Convert price strings to numbers
+  const prices = pricesText.map(price =>
+    parseFloat(price.replace('$', ''))
+  );
 
-    for (let i = 0; i < count; i++) {
-        const title = await items
-            .nth(i)
-            .locator('.inventory_item_name')
-            .innerText();
+  // 6. Assert prices are sorted low → high
+  const sortedPrices = [...prices].sort((a, b) => a - b);
+  expect(prices).toEqual(sortedPrices);
 
-        const priceText = await items
-            .nth(i)
-            .locator('.inventory_item_price')
-            .innerText();
+  // 7. Assert title + price correctness  for paring
+  expect(titles.length).toBe(prices.length);
 
-        const price = parseFloat(priceText.replace('$', ''));
+  titles.forEach((title, index) => {
+    expect(title).not.toBe('');
+    expect(prices[index]).toBeGreaterThan(0);
+  });
 
-        productData.push({ title, price });
-    }
-
-    // 5. Extract prices for sorting validation
-    const prices = productData.map(item => item.price);
-    const sortedPrices = [...prices].sort((a, b) => a - b);
-
-    // 6. Assert prices are sorted correctly
-    expect(prices).toEqual(sortedPrices);
-
-    // 7. Assert title + price correctness
-    // (Ensure no title is missing or price is invalid)
-    productData.forEach(product => {
-        expect(product.title).not.toBe('');
-        expect(product.price).toBeGreaterThan(0);
-
-    });
-    await page.screenshot({
-        path: 'screenshots/product-sorting-low-to-high.png',
-        fullPage: true
-    });
+  // 8. Screenshot after validation
+  await page.screenshot({
+    path: 'screenshots/product-sorting-low-to-high.png',
+    fullPage: true
+  });
 });

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';   //This is for importing test runner Playwright's and assertion library
 
 // Define a test case "test"
-test('Login with valid credentials and load product page', async ({ page }) => {
+test('The test verifies that the user can successfully logout', async ({ page }) => {
     // 1. This will navigate  me to the Swag Labs login page
     await page.goto('https://www.saucedemo.com/');
 
@@ -23,12 +23,20 @@ test('Login with valid credentials and load product page', async ({ page }) => {
 
   // 6. Assert that the product list is visible on the page
   // '.inventory_list' is the container holding all products
-  await expect(page.locator('.inventory_list')).toBeVisible();
+  //await expect(page.locator('.inventory_list')).toBeVisible();
 
+
+  await page.click('#react-burger-menu-btn');
+
+
+//   await page.click('.logout_sidebar_link')
+  await page.click('#logout_sidebar_link');
+
+  await expect(page).toHaveURL('https://www.saucedemo.com');
   // 7. Take a screenshot of the product page
   // List of product page has successfully loaded the test has passed 
   await page.screenshot({
-    path: 'screenshots/product-page.png',
+    path: 'screenshots/logout.png',
     fullPage: true
   });
 });

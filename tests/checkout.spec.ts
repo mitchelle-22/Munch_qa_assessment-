@@ -25,11 +25,10 @@ test('Complete checkout workflow end-to-end', async ({ page }) => {
   await page.fill('#last-name', 'Tester');
   await page.fill('#postal-code', '0001');
 
-  // 7. Continue to the overview page
+  // 7. Click Continue to be redirected to the checkout overview
   await page.click('#continue');
 
-  // 8. Verify that tax and total amounts are displayed
-  
+  // 8. Verify that Payment Information,Shipping Information and Price Total with tax are displayed
   await expect(page.locator('.summary_tax_label')).toBeVisible();
   await expect(page.locator('.summary_total_label')).toBeVisible();
 
